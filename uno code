@@ -1,0 +1,39 @@
+#include <Stepper.h>
+
+const int stepsPerRevolution = 2038; // Number of steps per revolution
+const int stepSize = 50; // Number of steps to move on command
+Stepper myStepper = Stepper(stepsPerRevolution, 8, 10, 9, 11);
+
+// Define stepper motor control pins
+const int motorPin1 = 8;
+const int motorPin2 = 10;
+const int motorPin3 = 9;
+const int motorPin4 = 11;
+
+void setup() {
+  Serial.begin(9600); // Start serial communication at 9600 baud rate
+  // Initialize the stepper motor control pins as outputs
+  pinMode(motorPin1, OUTPUT);
+  pinMode(motorPin2, OUTPUT);
+  pinMode(motorPin3, OUTPUT);
+  pinMode(motorPin4, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    char command = Serial.read(); // Read the incoming byte
+    if (command == 'R') {
+      myStepper.setSpeed(15); // Set speed
+      myStepper.step(stepSize); // Rotate CW for 50 steps
+    } else if (command == 'L') {
+      myStepper.setSpeed(15); // Set speed
+      myStepper.step(-stepSize); // Rotate CCW for 50 steps
+    } else if (command == 'S') {
+      // To stop the motor and make all control pins low
+      digitalWrite(motorPin1, LOW);
+      digitalWrite(motorPin2, LOW);
+      digitalWrite(motorPin3, LOW);
+      digitalWrite(motorPin4, LOW);
+    }
+  }
+}
